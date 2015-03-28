@@ -1,27 +1,18 @@
 class Charts
 {
   int rows, cols;
-  int row = 0, col = 0;
   int round = 5;
-  ArrayList<ArrayList<Chart>> charts;
+  ArrayList<Chart> charts = new ArrayList<Chart>();
+  ArrayList<Source> sources = new ArrayList<Source>();
   boolean initialized = false;
   
   Charts(int rows, int cols){
     this.rows = rows;
     this.cols = cols;
-    charts = new ArrayList<ArrayList<Chart>>(this.rows);
-    for(int r = 0; r < nRows; r++){
-      charts.add(new ArrayList<Chart>(this.cols));
-    }
   }
   
   void addChart(Chart chart){
-    charts.get(row).add(chart);
-    col++;
-    if(col >= cols){
-      col = 0;
-      row++;
-    }
+    charts.add(chart);
   }
   
   void draw(){
@@ -31,11 +22,10 @@ class Charts
     background(0);
     for(int r = 0; r < nRows; r++){
       for(int c = 0; c < nCols; c++){
-        try{
-          charts.get(r).get(c).draw();
-          charts.get(r).get(c).showOSD();
-          // println("" + r + "," + c);
-        }catch(IndexOutOfBoundsException ioobe){
+        int n = r * cols + c;
+        if( n < charts.size()){
+          charts.get(n).draw();
+          charts.get(n).showOSD();
         }
       }
     }
@@ -45,9 +35,9 @@ class Charts
   void addInputs(long ts, float[] inputs){
     for(int r = 0; r < nRows; r++){
       for(int c = 0; c < nCols; c++){
-        try{
-          charts.get(r).get(c).addInputs(ts,inputs);
-        }catch(IndexOutOfBoundsException ioobe){
+        int n = r * cols + c;
+        if( n < charts.size()){
+          charts.get(n).addInputs(ts,inputs);
         }
       }
     }
@@ -58,14 +48,14 @@ class Charts
     int hBlock = height / nRows;
     for(int r = 0; r < nRows; r++){
       for(int c = 0; c < nCols; c++){
-        try{
-          charts.get(r).get(c).setRect(
+        int n = r * cols + c;
+        if( n < charts.size()){
+          charts.get(n).setRect(
             c * wBlock,
             r * hBlock,
             wBlock,
             hBlock
            );
-        }catch(IndexOutOfBoundsException ioobe){
         }
       }
     }

@@ -9,26 +9,46 @@ Serial serial;
 void setup(){
   size(800,600);
   charts = new Charts(nRows, nCols);
-  for(int n=0; n < 3; n++){
-    Chart chart = new ChartLines("" + n + "P");
-    chart.addVariable(new Variable(n,float.class,0,10,true));
-    charts.addChart( chart );
-  }
-  for(int n=0; n < 3; n++){
-    Chart chart = new ChartLines("" + n + "L");
-    chart.addMenuItem("First");
-    chart.addMenuItem("Second");
-    chart.addMenuItem("Third");
-    chart.addVariable(new Variable(n+3,float.class,0,10,true));
-    chart.addVariable(new Variable(n+4,float.class,0,10,true));
-    charts.addChart( chart );
-  }
-  serial = new Serial(this, "/dev/ttyUSB0", 57600);
+  
+  Source source;
+  source = new Source();
+  Variable varTime = new Variable("Time",0,Variable.TYPE_TIME,0,10,true);
+  source.addVariable(varTime);
+  Variable varX = new Variable("X",1,Variable.TYPE_FLOAT,0,10,true);
+  source.addVariable(varX);
+  Variable varY = new Variable("Y",2,Variable.TYPE_FLOAT,0,10,true);
+  source.addVariable(varY);
+  Variable varZ = new Variable("Z",3,Variable.TYPE_FLOAT,0,10,true);
+  source.addVariable(varZ);
+  Variable varV = new Variable("V",4,Variable.TYPE_FLOAT,0,10,true);
+  source.addVariable(varZ);
+  
+  Chart chart;
+ 
+  chart = new ChartDiamond("Diam");
+  chart.addVariable(varX);
+  chart.addVariable(varY);
+  chart.addVariable(varZ);
+  chart.logSize = 10;
+  charts.addChart( chart );
+  
+  chart = new ChartSpeedometer("Speed");
+  chart.addVariable(varV);
+  chart.logSize = 5;
+  charts.addChart( chart );
+  
+  chart = new ChartLines("XYZ");
+  chart.addVariable(varX);
+  chart.addVariable(varY);
+  chart.addVariable(varZ);
+  charts.addChart( chart );
+
+  // serial = new Serial(this, "/dev/ttyUSB0", 57600);
 
 }
 
 void draw(){
-  // dummyInputs();
+  dummyInputs();
   charts.draw();
 }
 
@@ -40,9 +60,10 @@ void dummyInputs(){
   for(int v = 0; v < 12; v++){
     float range = (float)(((float)ts/500.0)%(10.0));
     inputs[v] = random(range-0.5 * sin(ts/100) * 3,range+0.5 * sin(ts/100) * 3);
+    inputs[0] += 5.0;
     values[v+1] = str(inputs[v]);
   }
-  //charts.addInputs(ts,inputs);
+  // charts.addInputs(ts,inputs);
   parseInputs(join(values,":"));
 }
 

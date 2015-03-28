@@ -3,6 +3,8 @@ class ChartLines extends Cartesian
   
   ChartLines(String name){
     super(name);
+    addMenuItem("Grid");
+    addMenuItem("Guide");
   }
   
   void draw(){
@@ -28,6 +30,23 @@ class ChartLines extends Cartesian
         prevX = posX;
         prevY = posY;
       }while( n != last);
+    }
+  }
+
+  boolean menuItemIsSelected(int menuItemSelected){
+    if(menu.get(menuItemSelected).equals("Grid")){
+      return grid;
+    } else if(menu.get(menuItemSelected).equals("Guide")){
+      return guide;
+    }
+    return false;
+  }
+  
+  void menuItemSelected(int menuItemSelected){
+    if(menu.get(menuItemSelected).equals("Grid")){
+      grid = ! grid;
+    } else if(menu.get(menuItemSelected).equals("Guide")){
+      guide = ! guide;
     }
   }
 

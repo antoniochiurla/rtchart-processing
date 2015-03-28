@@ -10,7 +10,7 @@ class Chart
   long timeSize; // in milliseconds
   ArrayList<float []> values;
   ArrayList<Variable> variables;
-  Variable defaultVariable = new Variable(0,float.class,0,10,true);
+  Variable defaultVariable = new Variable("",0,Variable.TYPE_FLOAT,0,10,true);
   boolean menuActive = false;
   int menuItemSelected = -1;
   ArrayList<String> menu;
@@ -142,10 +142,14 @@ class Chart
       int x2 = xBox + wBox / 2 + boxItemWidth / 2;
       int y2 = yPos + textSize;
       if(mouseInRect(x1,y1,x2,y2)){
-        fill(#c0c0c0);
+        fill(#e0e0e0);
         menuItemSelected = itemNum;
       } else {
-        fill(#e0e0e0);
+        if(menuItemIsSelected(itemNum)){
+          fill(#c0c0c0);
+        } else {
+          fill(#909090);
+        }
       }
       rect(xBox + wBox / 2 - boxItemWidth / 2, yPos, boxItemWidth,boxItemHeight);
       fill(#a04040);
@@ -161,6 +165,10 @@ class Chart
   
   void menuItemSelected(int menuItemSelected){
     println(menu.get(menuItemSelected));
+  }
+  
+  boolean menuItemIsSelected(int menuItemSelected){
+    return false;
   }
   
   boolean mouseInChart(){
