@@ -15,31 +15,25 @@ class Charts
     charts.add(chart);
   }
   
+  void addSource(Source source){
+    sources.add(source);
+  }
+  
   void draw(){
     if( ! initialized ){
       init();
     }
     background(0);
-    for(int r = 0; r < nRows; r++){
-      for(int c = 0; c < nCols; c++){
-        int n = r * cols + c;
-        if( n < charts.size()){
-          charts.get(n).draw();
-          charts.get(n).showOSD();
-        }
-      }
+    for(int n = 0; n < charts.size();n++){
+      charts.get(n).draw();
+      charts.get(n).showOSD();
     }
     
   }
   
-  void addInputs(long ts, float[] inputs){
-    for(int r = 0; r < nRows; r++){
-      for(int c = 0; c < nCols; c++){
-        int n = r * cols + c;
-        if( n < charts.size()){
-          charts.get(n).addInputs(ts,inputs);
-        }
-      }
+  void XXaddInputs(long ts, float[] inputs){
+    for(int n = 0; n < charts.size();n++){
+      charts.get(n).XXaddInputs(ts,inputs);
     }
   }
   
@@ -60,4 +54,33 @@ class Charts
       }
     }
   }
+  
+  void mouseWheel(MouseEvent event) {
+    for(int n = 0; n < charts.size();n++){
+      if(charts.get(n).mouseInChart()){
+        charts.get(n).mouseWheel(event);
+      }
+    }
+  }
+
+  void serialEvent(Serial port) {
+    for(int s = 0; s < sources.size(); s++){
+      if(sources.get(s) instanceof SourceSerial){
+        SourceSerial sourceSerial = (SourceSerial)sources.get(s);
+        if(sourceSerial.port == port){
+          sourceSerial.serialEvent(port);
+        }
+      }
+    }
+  }
+  
+  void dummyInputs() {
+    for(int s = 0; s < sources.size(); s++){
+      if(sources.get(s) instanceof SourceRandom){
+        SourceRandom sourceRandom = (SourceRandom)sources.get(s);
+        sourceRandom.dummyInputs();
+      }
+    }
+  }
+
 }

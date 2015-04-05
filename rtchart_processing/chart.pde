@@ -10,7 +10,9 @@ class Chart
   long timeSize; // in milliseconds
   ArrayList<float []> values;
   ArrayList<Variable> variables;
-  Variable defaultVariable = new Variable("",0,Variable.TYPE_FLOAT,0,10,true);
+  ArrayList<Source> sources;
+  boolean adapt = false;
+  // Variable defaultVariable = new Variable("",null,0,Variable.TYPE_FLOAT,0,10,true);
   boolean menuActive = false;
   int menuItemSelected = -1;
   ArrayList<String> menu;
@@ -22,6 +24,7 @@ class Chart
     this.name = name;
     println("Name: " + name);
     variables = new ArrayList<Variable>();
+    sources = new ArrayList<Source>();
     initLog();
     menu = new ArrayList<String>();
     initVariables();
@@ -55,6 +58,10 @@ class Chart
   void addVariable(Variable variable){
     variables.add(variable);
     initLog();
+  }
+  
+  void setAdapt(boolean adapt){
+    this.adapt = adapt;
   }
   
   void setRect( int x, int y, int w, int h){
@@ -99,7 +106,15 @@ class Chart
     stroke(#202020);
     fill(#c0c0c0);
     rect(xBox,yBox,wBox,hBox,r);
+    showName();
     handleMenu();
+  }
+  
+  void showName(){
+    textSize(20);
+    stroke(#505050);
+    fill(#707070);
+    text(name,xBox + wBox - textWidth(name + " " ),yBox + 20);
   }
   
   void handleMenu(){
@@ -180,7 +195,7 @@ class Chart
     return mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2;
   }
   
-  void addInputs( long ts, float[] inputs ){
+  void XXaddInputs( long ts, float[] inputs ){
     last++;
     if(last >= logSize){
       last = 0;
@@ -196,6 +211,12 @@ class Chart
       values.get(v)[last] = inputs[variables.get(v).index];
     }
   }
+
+  void mouseWheel(MouseEvent event) {
+    float e = event.getCount();
+    println(e);
+  }
   
 }
+
 

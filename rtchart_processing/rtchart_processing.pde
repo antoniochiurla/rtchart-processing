@@ -11,17 +11,18 @@ void setup(){
   charts = new Charts(nRows, nCols);
   
   Source source;
-  source = new Source();
-  Variable varTime = new Variable("Time",0,Variable.TYPE_TIME,0,10,true);
+  source = new SourceRandom();
+  charts.addSource(source);
+  Variable varTime = new Variable("Time",0,Variable.TYPE_TIME,0,1,0,10,false);
   source.addVariable(varTime);
-  Variable varX = new Variable("X",1,Variable.TYPE_FLOAT,0,10,true);
+  Variable varX = new Variable("X",1,Variable.TYPE_FLOAT,0,1,0,10,false);
   source.addVariable(varX);
-  Variable varY = new Variable("Y",2,Variable.TYPE_FLOAT,0,10,true);
+  Variable varY = new Variable("Y",2,Variable.TYPE_FLOAT,0,1,0,10,false);
   source.addVariable(varY);
-  Variable varZ = new Variable("Z",3,Variable.TYPE_FLOAT,0,10,true);
+  Variable varZ = new Variable("Z",3,Variable.TYPE_FLOAT,0,1,0,10,false);
   source.addVariable(varZ);
-  Variable varV = new Variable("V",4,Variable.TYPE_FLOAT,0,10,true);
-  source.addVariable(varZ);
+  Variable varV = new Variable("V",4,Variable.TYPE_FLOAT,0,1,0,10,false);
+  source.addVariable(varV);
   
   Chart chart;
  
@@ -48,7 +49,7 @@ void setup(){
 }
 
 void draw(){
-  dummyInputs();
+  charts.dummyInputs();
   charts.draw();
 }
 
@@ -57,17 +58,19 @@ void dummyInputs(){
   float[] inputs = new float[12];
   String[] values = new String[13];
   values[0] = "" + ts;
-  for(int v = 0; v < 12; v++){
+  for(int v = 1; v < 12; v++){
     float range = (float)(((float)ts/500.0)%(10.0));
     inputs[v] = random(range-0.5 * sin(ts/100) * 3,range+0.5 * sin(ts/100) * 3);
-    inputs[0] += 5.0;
+    inputs[1] += 5.0;
     values[v+1] = str(inputs[v]);
   }
   // charts.addInputs(ts,inputs);
-  parseInputs(join(values,":"));
+  XXparseInputs(join(values,":"));
 }
 
 void serialEvent(Serial port) {
+  charts.serialEvent(port);
+  /*
   while (serial.available() > 0) {
     int ch = serial.read();
     serialBuffer += (char)ch;
@@ -76,8 +79,9 @@ void serialEvent(Serial port) {
       serialBuffer="";
     }
   }
+  */
 }
-void parseInputs(String values){
+void XXparseInputs(String values){
   String[] tokens= splitTokens(values, ",=: ");
   float[] inputs = new float[tokens.length - 1];
 
@@ -85,5 +89,10 @@ void parseInputs(String values){
   for(int n=1; n<tokens.length; n++){
     inputs[n-1] = float( trim(tokens[n]) );
   }
-  charts.addInputs(ts,inputs);
+  charts.XXaddInputs(ts,inputs);
 }
+
+void mouseWheel(MouseEvent event) {
+  charts.mouseWheel(event);
+}
+

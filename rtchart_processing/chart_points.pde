@@ -10,9 +10,10 @@ class ChartPoints extends Cartesian
     stroke(0);
     float posX, posY;
     for(int v = 0; v < variables.size(); v++){
-      int n = first;
+      Variable var = variables.get(v);
+      int n = var.source.first;
       stroke(colors.get(variables.get(v).index % colors.size()));
-      do{
+      while( n != var.source.last){
         posX = x+(float)(ts[n] % timeSize) * (float)w / (float)timeSize;
         float val = values.get(v)[n];
         posY = y + h - val * h / ( variables.get(v).getRangeSize() );
@@ -21,7 +22,7 @@ class ChartPoints extends Cartesian
         if(++n >= logSize){
           n = 0;
         }
-      }while( n != last);
+      }
     }
   }
 }

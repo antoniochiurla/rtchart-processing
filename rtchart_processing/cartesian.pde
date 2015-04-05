@@ -1,10 +1,27 @@
 class Cartesian extends Chart {
   boolean guide = true;
   boolean grid = true;
+  boolean adapt = true;
+  float min = Float.MAX_VALUE;
+  float max = Float.MIN_VALUE;
+  Variable abscissa;
 
   Cartesian(String name){
     super(name);
+    addMenuItem("Grid");
+    addMenuItem("Guide");
   }
+
+  void setAbscissa(Variable abscissa){
+    this.abscissa = abscissa;
+  }
+  
+  void addVariable(Variable variable){
+    super.addVariable(variable);
+    min = min(min,( variable.min + variable.offset ) * variable.factor);
+    max = max(max,( variable.max + variable.offset ) * variable.factor);
+  }
+
   
   void setGuide(boolean guide){
     this.guide = guide;
@@ -40,9 +57,9 @@ class Cartesian extends Chart {
     stroke(#b0b0b0);
     line(x,y+h,x+w,y+h);
     line(x,y,x,y+h);
-    float stepSize = ( variables.get(0).max - variables.get(0).min ) / 10.0;
+    float stepSize = ( max - min ) / 10.0;
     float stepY;
-    for(float step = variables.get(0).min + stepSize; step <= variables.get(0).max; step += stepSize){
+    for(float step = min + stepSize; step <= max; step += stepSize){
       stepY = calcY(step,0);
       line(x,stepY,x+w,stepY);
     }
@@ -55,17 +72,16 @@ class Cartesian extends Chart {
   }
 
   void drawGuide(){
-    textSize(20);
     stroke(#505050);
     fill(#707070);
-    text(name,xBox + wBox - textWidth(name + " " ),yBox + 20);
+    drawLegend();
     line(x,y+h,x+w,y+h);
     line(x,y,x,y+h);
     textSize(10);
     String text;
-    float stepSize = ( variables.get(0).max - variables.get(0).min ) / 10.0;
+    float stepSize = ( max - min ) / 10.0;
     float stepY;
-    for(float step = variables.get(0).min + stepSize; step <= variables.get(0).max; step += stepSize){
+    for(float step = min + stepSize; step <= max; step += stepSize){
       stepY = calcY(step,0);
       text = humanNumber(step);
       text(text,x - textWidth(text + " "),stepY + 3);
@@ -82,11 +98,19 @@ class Cartesian extends Chart {
     }
   }
   
+  void drawLegend(){
+    textSize(15);
+    for(int v = 0; v < variables.size(); v++){
+      fill(colors.get(v % colors.size()));
+      text(variables.get(v).name,xBox,yBox+15*(v+1));
+    }
+  }
+  
   String humanNumber(float value){
     String text;
     float stepShow = value;
     String unit = "";
-    if(stepShow > 9000000){
+    if(stepShow > 1000000){
       stepShow /= 1000000;
       unit = "M";
     } else if(stepShow > 1000){
@@ -105,18 +129,36 @@ class Cartesian extends Chart {
   
   float calcY(float value, int v){
     float vInRange;
-    if(variables.get(v).adapt){
-       if(value<variables.get(v).min){
-         variables.get(v).setMin(value);
-       }
-       if(value>variables.get(v).max){
-         variables.get(v).setMax(value);
-       }
-       vInRange = value;
+    Variable var = variables.get(v);
+    vInRange = ( value + var.offset ) * var.factor;
+    if(adapt){
+      min=min(value,min);
+      max=max(value,max);
+      vInRange = value;
     } else {
-      vInRange = max(variables.get(v).min,min(variables.get(v).max,value));
+      vInRange = max(var.min,min(var.max,value));
     }
-    return (float)y + (float)h - ( vInRange - variables.get(v).min ) * (float)h / ( variables.get(v).getRangeSize() );
+    return (float)y + (float)h - ( vInRange - min ) * (float)h / ( getRangeSize() );
   }
 
+  float getRangeSize(){
+    return max - min;
+  }
+
+  boolean menuItemIsSelected(int menuItemSelected){
+    if(menu.get(menuItemSelected).equals("Grid")){
+      return grid;
+    } else if(menu.get(menuItemSelected).equals("Guide")){
+      return guide;
+    }
+    return false;
+  }
+  
+  void menuItemSelected(int menuItemSelected){
+    if(menu.get(menuItemSelected).equals("Grid")){
+      grid = ! grid;
+    } else if(menu.get(menuItemSelected).equals("Guide")){
+      guide = ! guide;
+    }
+  }
 }
