@@ -1,7 +1,7 @@
 class Cartesian extends Chart {
   boolean guide = true;
   boolean grid = true;
-  boolean adapt = true;
+  // boolean adapt = true;
   float min = Float.MAX_VALUE;
   float max = Float.MIN_VALUE;
   Variable abscissa;
@@ -136,7 +136,7 @@ class Cartesian extends Chart {
       max=max(value,max);
       vInRange = value;
     } else {
-      vInRange = max(var.min,min(var.max,value));
+      vInRange = max(min,min(max,vInRange));
     }
     return (float)y + (float)h - ( vInRange - min ) * (float)h / ( getRangeSize() );
   }

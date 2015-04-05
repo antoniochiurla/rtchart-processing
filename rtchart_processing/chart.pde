@@ -6,7 +6,6 @@ class Chart
   int xBorderLeft, xBorderRight, yBorderTop, yBorderBottom;
   int r = 10; // round rec
   int logSize = 200;
-  long ts[];
   long timeSize; // in milliseconds
   ArrayList<float []> values;
   ArrayList<Variable> variables;
@@ -97,7 +96,6 @@ class Chart
     for(int v = 0; v < variables.size(); v++){
       values.add(new float[ logSize ]);
     }
-    ts = new long[ logSize ];
     first = 1;
     last = -1;
   }
@@ -195,23 +193,6 @@ class Chart
     return mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2;
   }
   
-  void XXaddInputs( long ts, float[] inputs ){
-    last++;
-    if(last >= logSize){
-      last = 0;
-    }
-    if(last == first){
-      first++;
-      if(first >= logSize){
-        first = 0;
-      }
-    }
-    this.ts[last] = ts;
-    for(int v = 0; v < variables.size(); v++){
-      values.get(v)[last] = inputs[variables.get(v).index];
-    }
-  }
-
   void mouseWheel(MouseEvent event) {
     float e = event.getCount();
     println(e);

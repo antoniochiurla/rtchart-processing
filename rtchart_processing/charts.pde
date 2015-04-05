@@ -31,12 +31,6 @@ class Charts
     
   }
   
-  void XXaddInputs(long ts, float[] inputs){
-    for(int n = 0; n < charts.size();n++){
-      charts.get(n).XXaddInputs(ts,inputs);
-    }
-  }
-  
   void init(){
     int wBlock = width / nCols;
     int hBlock = height / nRows;
@@ -79,6 +73,10 @@ class Charts
       if(sources.get(s) instanceof SourceRandom){
         SourceRandom sourceRandom = (SourceRandom)sources.get(s);
         sourceRandom.dummyInputs();
+      }
+      if(sources.get(s) instanceof SourceTrigonometry){
+        SourceTrigonometry sourceTrigonometry = (SourceTrigonometry)sources.get(s);
+        sourceTrigonometry.inputs();
       }
     }
   }

@@ -53,7 +53,7 @@ class Source {
   }
 
   void parseInputs(String values){
-    println(values);
+    // println(values);
     String[] tokens= splitTokens(values, ",=: ");
     float[] inputs = new float[tokens.length];
   

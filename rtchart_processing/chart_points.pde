@@ -20,7 +20,7 @@ class ChartPoints extends Cartesian
       }
       stroke(colors.get(variables.get(v).index % colors.size()));
       while( n != var.source.last){
-        posX = x+(float)(ts[n] % timeSize) * (float)w / (float)timeSize;
+        posX = calcX(abscissa.source.values.get(abscissa.index)[n],v);
         float val = values.get(v)[n];
         posY = y + h - val * h / ( variables.get(v).getRangeSize() );
         //println("" + v + " " + ts[n] + " " + posX + "," + posY);

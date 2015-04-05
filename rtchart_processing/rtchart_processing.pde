@@ -45,6 +45,29 @@ void setup(){
   chartLines.addVariable(varZ);
   charts.addChart( chartLines );
 
+  source = new SourceTrigonometry();
+  charts.addSource(source);
+  varTime = new Variable("Time",0,Variable.TYPE_TIME,0,1,0,10,false);
+  source.addVariable(varTime);
+  Variable varSin = new Variable("Sin",1,Variable.TYPE_FLOAT,0,1,0,10,false);
+  source.addVariable(varSin);
+  Variable varCos = new Variable("Cos",2,Variable.TYPE_FLOAT,0,1,0,10,false);
+  source.addVariable(varCos);
+  Variable varTan = new Variable("Tan",3,Variable.TYPE_FLOAT,0,1,0,10,false);
+  source.addVariable(varTan);
+  Variable varATan = new Variable("ATan",4,Variable.TYPE_FLOAT,0,1,0,10,false);
+  source.addVariable(varATan);
+  chartLines = new ChartLines("Trig");
+  chartLines.setAdapt(false);
+  chartLines.setAbscissa(varTime);
+  chartLines.addVariable(varSin);
+  chartLines.addVariable(varCos);
+  chartLines.addVariable(varTan);
+  chartLines.addVariable(varATan);
+  chartLines.min = -2;
+  chartLines.max = 2;
+  charts.addChart( chartLines );
+
   // serial = new Serial(this, "/dev/ttyUSB0", 57600);
 
 }
@@ -52,21 +75,6 @@ void setup(){
 void draw(){
   charts.dummyInputs();
   charts.draw();
-}
-
-void dummyInputs(){
-  ts+= 20;
-  float[] inputs = new float[12];
-  String[] values = new String[13];
-  values[0] = "" + ts;
-  for(int v = 1; v < 12; v++){
-    float range = (float)(((float)ts/500.0)%(10.0));
-    inputs[v] = random(range-0.5 * sin(ts/100) * 3,range+0.5 * sin(ts/100) * 3);
-    inputs[1] += 5.0;
-    values[v+1] = str(inputs[v]);
-  }
-  // charts.addInputs(ts,inputs);
-  XXparseInputs(join(values,":"));
 }
 
 void serialEvent(Serial port) {
@@ -81,16 +89,6 @@ void serialEvent(Serial port) {
     }
   }
   */
-}
-void XXparseInputs(String values){
-  String[] tokens= splitTokens(values, ",=: ");
-  float[] inputs = new float[tokens.length - 1];
-
-  long ts = Long.parseLong( trim(tokens[0]) ); // primo valore
-  for(int n=1; n<tokens.length; n++){
-    inputs[n-1] = float( trim(tokens[n]) );
-  }
-  charts.XXaddInputs(ts,inputs);
 }
 
 void mouseWheel(MouseEvent event) {
