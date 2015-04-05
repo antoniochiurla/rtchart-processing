@@ -30,19 +30,20 @@ void setup(){
   chart.addVariable(varX);
   chart.addVariable(varY);
   chart.addVariable(varZ);
-  chart.logSize = 10;
+  chart.setLogSize(10);
   charts.addChart( chart );
   
   chart = new ChartSpeedometer("Speed");
   chart.addVariable(varV);
-  chart.logSize = 5;
+  chart.setLogSize(5);
   charts.addChart( chart );
   
-  chart = new ChartLines("XYZ");
-  chart.addVariable(varX);
-  chart.addVariable(varY);
-  chart.addVariable(varZ);
-  charts.addChart( chart );
+  ChartLines chartLines = new ChartLines("XYZ");
+  chartLines.setAbscissa(varTime);
+  chartLines.addVariable(varX);
+  chartLines.addVariable(varY);
+  chartLines.addVariable(varZ);
+  charts.addChart( chartLines );
 
   // serial = new Serial(this, "/dev/ttyUSB0", 57600);
 

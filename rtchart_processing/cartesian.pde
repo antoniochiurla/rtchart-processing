@@ -11,7 +11,7 @@ class Cartesian extends Chart {
     addMenuItem("Grid");
     addMenuItem("Guide");
   }
-
+  
   void setAbscissa(Variable abscissa){
     this.abscissa = abscissa;
   }

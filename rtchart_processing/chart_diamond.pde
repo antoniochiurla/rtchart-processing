@@ -20,6 +20,12 @@ class ChartDiamond extends Chart {
     
     float light = 255.0;
     int n = variables.get(0).source.first;
+    if(logSize<variables.get(0).source.logSize){
+      n = variables.get(0).source.last - logSize;
+      if(n < 0){
+        n = variables.get(0).source.logSize + n;
+      }
+    }
     while( n != variables.get(0).source.last){
       light -= 255 / logSize;
       stroke((int)light,(int)light,255);
@@ -29,7 +35,7 @@ class ChartDiamond extends Chart {
       float firstY = 0.0;
       for(int v = 0; v < variables.size(); v++){
         Variable var = variables.get(v);
-        float value = var.source.values.get(v)[n];
+        float value = var.source.values.get(var.index)[n];
         float vInRange;
         vInRange = ( value + var.offset ) * var.factor;
         if(adapt){

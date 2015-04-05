@@ -12,6 +12,12 @@ class ChartPoints extends Cartesian
     for(int v = 0; v < variables.size(); v++){
       Variable var = variables.get(v);
       int n = var.source.first;
+      if(logSize<variables.get(0).source.logSize){
+        n = variables.get(0).source.last - logSize;
+        if(n < 0){
+          n = variables.get(0).source.logSize + n;
+        }
+      }
       stroke(colors.get(variables.get(v).index % colors.size()));
       while( n != var.source.last){
         posX = x+(float)(ts[n] % timeSize) * (float)w / (float)timeSize;

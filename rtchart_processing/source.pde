@@ -11,7 +11,6 @@ class Source {
   int type;
   int format;
   int logSize = 200;
-  long[] ts;
   ArrayList<float []> values;
   int first, last;
   
@@ -33,12 +32,11 @@ class Source {
     for(int v = 0; v < variables.size(); v++){
       values.add(new float[ logSize ]);
     }
-    ts = new long[ logSize ];
     first = 1;
     last = -1;
   }
   
-  void addInputs( long ts, float[] inputs ){
+  void addInputs( float[] inputs ){
     last++;
     if(last >= logSize){
       last = 0;
@@ -49,7 +47,6 @@ class Source {
         first = 0;
       }
     }
-    this.ts[last] = ts;
     for(int v = 0; v < variables.size(); v++){
       values.get(v)[last] = inputs[variables.get(v).index];
     }
@@ -58,12 +55,11 @@ class Source {
   void parseInputs(String values){
     println(values);
     String[] tokens= splitTokens(values, ",=: ");
-    float[] inputs = new float[tokens.length - 1];
+    float[] inputs = new float[tokens.length];
   
-    long ts = Long.parseLong( trim(tokens[0]) ); // primo valore
-    for(int n=1; n<tokens.length; n++){
-      inputs[n-1] = float( trim(tokens[n]) );
+    for(int n=0; n<tokens.length; n++){
+      inputs[n] = float( trim(tokens[n]) );
     }
-   addInputs(ts,inputs);
+   addInputs(inputs);
   }
 }
