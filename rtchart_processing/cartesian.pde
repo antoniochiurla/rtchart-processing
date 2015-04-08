@@ -1,6 +1,4 @@
 class Cartesian extends Chart {
-  boolean guide = true;
-  boolean grid = true;
   // boolean adapt = true;
   float min = Float.MAX_VALUE;
   float max = Float.MIN_VALUE;
@@ -23,19 +21,8 @@ class Cartesian extends Chart {
   }
 
   
-  void setGuide(boolean guide){
-    this.guide = guide;
-    calcBox();
-  }
-  
   void draw() {
     super.draw();
-    if(guide){
-      drawGuide();
-    }
-    if(grid){
-      drawGrid();
-    }
   }
   
   void calcBox(){
@@ -79,7 +66,7 @@ class Cartesian extends Chart {
     line(x,y,x,y+h);
     textSize(10);
     String text;
-    float stepSize = ( max - min ) / 10.0;
+    float stepSize = stepSize(min,max);
     float stepY;
     for(float step = min + stepSize; step <= max; step += stepSize){
       stepY = calcY(step,0);
@@ -96,29 +83,6 @@ class Cartesian extends Chart {
       text(text,stepX - textWidth(text + " ") / 2,y + h + 10);
       line(stepX,y + h,stepX,y + h -3);
     }
-  }
-  
-  void drawLegend(){
-    textSize(15);
-    for(int v = 0; v < variables.size(); v++){
-      fill(colors.get(v % colors.size()));
-      text(variables.get(v).name,xBox,yBox+15*(v+1));
-    }
-  }
-  
-  String humanNumber(float value){
-    String text;
-    float stepShow = value;
-    String unit = "";
-    if(stepShow > 1000000){
-      stepShow /= 1000000;
-      unit = "M";
-    } else if(stepShow > 1000){
-      stepShow /= 1000;
-      unit = "K";
-    }
-    text = str(round(stepShow)) + unit;
-    return text;
   }
   
   float calcX(float value, int v){

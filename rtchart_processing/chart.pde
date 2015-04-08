@@ -1,5 +1,7 @@
 class Chart
 {
+  boolean guide = true;
+  boolean grid = true;
   String name;
   int x, y, w, h;
   int xBox, yBox, wBox, hBox;
@@ -59,6 +61,11 @@ class Chart
     initLog();
   }
   
+  void setGuide(boolean guide){
+    this.guide = guide;
+    calcBox();
+  }
+  
   void setAdapt(boolean adapt){
     this.adapt = adapt;
   }
@@ -106,6 +113,26 @@ class Chart
     rect(xBox,yBox,wBox,hBox,r);
     showName();
     handleMenu();
+    if(guide){
+      drawGuide();
+    }
+    if(grid){
+      drawGrid();
+    }
+  }
+  
+  void drawGrid(){
+  }
+  
+  void drawGuide(){
+  }
+  
+  void drawLegend(){
+    textSize(15);
+    for(int v = 0; v < variables.size(); v++){
+      fill(colors.get(v % colors.size()));
+      text(variables.get(v).name,xBox,yBox+15*(v+1));
+    }
   }
   
   void showName(){
@@ -196,6 +223,37 @@ class Chart
   void mouseWheel(MouseEvent event) {
     float e = event.getCount();
     println(e);
+  }
+
+  float log10(float x) {
+    return (log(x) / log(10));
+  }
+  
+  float stepSize(float min, float max) {
+    return ( max - min ) / 10.0;
+  }
+
+  String humanNumber(float value){
+    String text;
+    float stepShow = value;
+    float log10 = log10(stepShow);
+    String unit = "";
+    if(log10 >= 6){
+      stepShow /= 1000000;
+      unit = "M";
+    } else if(log10 >= 3){
+      stepShow /= 1000;
+      unit = "K";
+    } else if(log10 == 0){
+    } else if(log10 <= -6){
+      stepShow *= 1000000.0;
+      unit = "u";
+    } else if(log10 <= -3){
+      stepShow *= 1000.0;
+      unit = "m";
+    }
+    text = str(round(stepShow * 10.0) / 10.0 ) + unit;
+    return text;
   }
   
 }

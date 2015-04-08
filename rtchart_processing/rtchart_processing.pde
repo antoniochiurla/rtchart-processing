@@ -31,11 +31,16 @@ void setup(){
   chart.addVariable(varY);
   chart.addVariable(varZ);
   chart.setLogSize(10);
+  chart.setAdapt(true);
   charts.addChart( chart );
   
   chart = new ChartSpeedometer("Speed");
+  chart.addVariable(varX);
+  chart.addVariable(varY);
+  chart.addVariable(varZ);
   chart.addVariable(varV);
-  chart.setLogSize(5);
+  chart.setAdapt(true);
+  chart.setLogSize(1);
   charts.addChart( chart );
   
   ChartLines chartLines = new ChartLines("XYZ");
