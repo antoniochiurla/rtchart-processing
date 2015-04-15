@@ -1,4 +1,5 @@
 import processing.serial.*;
+
 int nRows = 3;
 int nCols = 2;
 Charts charts;
@@ -34,13 +35,21 @@ void setup(){
   chart.setAdapt(true);
   charts.addChart( chart );
   
+  chart = new ChartCircles("Circle");
+  chart.addVariable(varX);
+  chart.addVariable(varY);
+  chart.addVariable(varZ);
+  chart.setLogSize(10);
+  chart.setAdapt(true);
+  charts.addChart( chart );
+  
   chart = new ChartSpeedometer("Speed");
   chart.addVariable(varX);
   chart.addVariable(varY);
   chart.addVariable(varZ);
   chart.addVariable(varV);
-  chart.setAdapt(true);
-  chart.setLogSize(1);
+  chart.setAdapt(false);
+  chart.setLogSize(5);
   charts.addChart( chart );
   
   ChartLines chartLines = new ChartLines("XYZ");
@@ -73,6 +82,16 @@ void setup(){
   chartLines.max = 2;
   charts.addChart( chartLines );
 
+  ChartCircles chartCircles = new ChartCircles("Circle");
+  chartCircles.addVariable(varSin);
+  chartCircles.addVariable(varCos);
+  // chart.addVariable(varTan);
+  chartCircles.setLogSize(10);
+  chartCircles.setAdapt(false);
+  chartCircles.min = -1;
+  chartCircles.max = 1;
+  charts.addChart( chartCircles );
+  
   // serial = new Serial(this, "/dev/ttyUSB0", 57600);
 
 }

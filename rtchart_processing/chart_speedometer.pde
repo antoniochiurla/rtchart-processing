@@ -17,7 +17,7 @@ class ChartSpeedometer extends Chart {
     stroke(0);
     float posX, posY;
     
-    float light = 255.0;
+    float alpha = 0.0;
     int n = variables.get(0).source.first;
     if(logSize<variables.get(0).source.logSize){
       n = variables.get(0).source.last - logSize;
@@ -26,12 +26,12 @@ class ChartSpeedometer extends Chart {
       }
     }
     while( n != variables.get(0).source.last){
-      light -= 255 / logSize;
-      stroke((int)light,(int)light,255);
+      alpha += 255 / logSize;
       float firstX = 0.0;
       float firstY = 0.0;
       float vInRange;
       for(int v = 0; v < variables.size(); v++){
+        stroke(colors.get(v % colors.size()),alpha);
         Variable var = variables.get(v);
         float value = var.source.values.get(var.index)[n];
         if(adapt){
@@ -63,19 +63,38 @@ class ChartSpeedometer extends Chart {
     stroke(#505050);
     fill(#707070);
     drawLegend();
-    line(x,y+h,x+w,y+h);
-    line(x,y,x,y+h);
+    //line(x,y+h,x+w,y+h);
+    //line(x,y,x,y+h);
     textSize(10);
     noFill();
     arc(x + w / 2,y + h / 5 * 4, w / 2.3 * 2.0,h / 5.0 * 3.5 * 2.0, PI, TWO_PI);
     String text;
-    float stepSize = stepSize(min,max);
+    float stepSize;
+    float stepX;
     float stepY;
-    for(float step = min + stepSize; step <= max; step += stepSize){
-      stepY = calcY(step);
-      text = humanNumber(step);
-      text(text,x - textWidth(text + " "),stepY + 3);
-      line(x,stepY,x+3,stepY);
+    float steps = 1.0;
+    int startDett = 0;
+    if(w > 400){
+      startDett = 0;
+    }
+    for(int dett = startDett; dett <= 2; dett++){
+      switch(dett){
+        case 0: steps = 10.0; stroke(#b8b8b8); break;
+        case 1: steps = 2.0; stroke(#b0b0b0); break;
+        case 2: steps = 1.0; stroke(#a0a0a0); break;
+      }
+      stepSize = stepSize(min,max) / steps;
+      for(float step = min; step <= max; step += stepSize){
+        stepX = calcX(step);
+        stepY = calcY(step);
+        text = humanNumber(step);
+        // text(text,x - textWidth(text + " "),stepY + 3);
+        if(dett == 2){
+          text(text,x + stepX * 1.09 + w / 2 - textWidth(text + " ") / 2.0,y + stepY * 1.09 + h / 5 * 4);
+        }
+        line(x + w / 2 + stepX * 0.9,y + h / 5 * 4 + stepY * 0.9,x + stepX + w / 2,y + stepY + h / 5 * 4);
+       //line(x,stepY,x+3,stepY);
+      }
     }
   }
   

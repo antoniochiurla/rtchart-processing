@@ -44,17 +44,30 @@ class Cartesian extends Chart {
     stroke(#b0b0b0);
     line(x,y+h,x+w,y+h);
     line(x,y,x,y+h);
-    float stepSize = ( max - min ) / 10.0;
+    float stepSize;
     float stepY;
-    for(float step = min + stepSize; step <= max; step += stepSize){
-      stepY = calcY(step,0);
-      line(x,stepY,x+w,stepY);
+    float steps = 10.0;
+    int startDett = 1;
+    if(w > 400){
+      startDett = 0;
     }
-    stepSize = timeSize / 10.0;
-    float stepX;
-    for(float step = 0; step <= timeSize; step += stepSize){
-      stepX = calcX(step,0);
-      line(stepX,y,stepX,y + h);
+    for(int dett = startDett; dett <= 2; dett++){
+      switch(dett){
+        case 0: steps = 100.0; stroke(#d0d0d0); break;
+        case 1: steps = 20.0; stroke(#bababa); break;
+        case 2: steps = 10.0; stroke(#b0b0b0); break;
+      }
+      stepSize = ( max - min ) / steps;
+      for(float step = min + stepSize; step <= max; step += stepSize){
+        stepY = calcY(step,0);
+        line(x,stepY,x+w,stepY);
+      }
+      stepSize = timeSize / steps;
+      float stepX;
+      for(float step = 0; step <= timeSize; step += stepSize){
+        stepX = calcX(step,0);
+        line(stepX,y,stepX,y + h);
+      }
     }
   }
 
